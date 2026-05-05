@@ -1,114 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>YouTube Clone</title>
-  <style>
-    body {
-      font-family: Arial;
-      margin: 0;
-      background: #f9f9f9;
-    }
-
-    header {
-      background: red;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 24px;
-    }
-
-    .container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 15px;
-      padding: 20px;
-    }
-
-    .video-card {
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      cursor: pointer;
-    }
-
-    .video-card img {
-      width: 100%;
-    }
-
-    .video-card h4 {
-      margin: 10px;
-      font-size: 16px;
-    }
-
-    .player {
-      display: none;
-      padding: 20px;
-    }
-
-    iframe {
-      width: 100%;
-      height: 400px;
-    }
-
-    button {
-      margin-top: 10px;
-      padding: 10px;
-      background: red;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-  </style>
+    <title>Mini YouTube App</title>
+    <style>
+        body { font-family: Arial; text-align: center; }
+        input { width: 300px; padding: 10px; }
+        button { padding: 10px; }
+        iframe { margin-top: 20px; }
+    </style>
 </head>
 <body>
 
-<header>My YouTube Clone</header>
+    <h1>Mini YouTube App</h1>
+    
+    <input type="text" id="search" placeholder="Search videos...">
+    <button onclick="searchVideos()">Search</button>
 
-<div class="container" id="videoList"></div>
+    <div id="videos"></div>
 
-<div class="player" id="player">
-  <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
-  <br>
-  <button onclick="goBack()">Back</button>
-</div>
+    <script>
+        const API_KEY = "YOUR_API_KEY"; // Replace with your YouTube API key
 
-<script>
-  const videos = [
-    { title: "Sample Video 1", id: "dQw4w9WgXcQ" },
-    { title: "Sample Video 2", id: "3JZ_D3ELwOQ" },
-    { title: "Sample Video 3", id: "L_jWHffIx5E" }
-  ];
+        function searchVideos() {
+            const query = document.getElementById("search").value;
 
-  const videoList = document.getElementById("videoList");
+            fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&key=${API_KEY}&maxResults=5`)
+                .then(response => response.json())
+                .then(data => {
+                    let output = "";
 
-  videos.forEach(video => {
-    const card = document.createElement("div");
-    card.className = "video-card";
+                    data.items.forEach(item => {
+                        if (item.id.videoId) {
+                            output += `
+                                <iframe width="300" height="200"
+                                src="https://www.youtube.com/embed/${item.id.videoId}"
+                                frameborder="0" allowfullscreen></iframe>
+                            `;
+                        }
+                    });
 
-    card.innerHTML = `
-      <img src="https://img.youtube.com/vi/${video.id}/0.jpg">
-      <h4>${video.title}</h4>
-    `;
-
-    card.onclick = () => playVideo(video.id);
-    videoList.appendChild(card);
-  });
-
-  function playVideo(id) {
-    document.querySelector(".container").style.display = "none";
-    document.getElementById("player").style.display = "block";
-    document.getElementById("videoFrame").src =
-      "https://www.youtube.com/embed/" + id;
-  }
-
-  function goBack() {
-    document.querySelector(".container").style.display = "grid";
-    document.getElementById("player").style.display = "none";
-    document.getElementById("videoFrame").src = "";
-  }
-</script>
+                    document.getElementById("videos").innerHTML = output;
+                });
+        }
+    </script>
 
 </body>
+</html>
 </html>
