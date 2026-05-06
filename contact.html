@@ -1,20 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Mini YouTube App</title>
     <style>
         body { font-family: Arial; text-align: center; }
         input { width: 300px; padding: 10px; }
         button { padding: 10px; }
         iframe { margin-top: 20px; }
+
+    <title>YouTube Finder</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f9f9f9;
+            text-align: center;
+        }
+        h1 {
+            color: #cc0000;
+        }
+        input {
+            width: 250px;
+            padding: 8px;
+        }
+        button {
+            padding: 8px 12px;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #videos {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .video-card {
+            width: 250px;
+            margin: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        img {
+            width: 100%;
+            border-radius: 5px;
+        }
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            display: block;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
+
 
     <h1>Mini YouTube App</h1>
     
     <input type="text" id="search" placeholder="Search videos...">
     <button onclick="searchVideos()">Search</button>
+
+    <h1>YouTube Finder</h1>
+
+    <input type="text" id="searchBox" placeholder="Search videos here...">
+    <button onclick="getVideos()">Search</button>
 
     <div id="videos"></div>
 
@@ -40,6 +94,32 @@
                     });
 
                     document.getElementById("videos").innerHTML = output;
+
+        const API_KEY = "YOUR_API_KEY"; // Replace with your API key
+
+        function getVideos() {
+            const search = document.getElementById("searchBox").value;
+
+            fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${search}&key=${API_KEY}&maxResults=6`)
+                .then(res => res.json())
+                .then(data => {
+                    let result = "";
+
+                    data.items.forEach(video => {
+                        if (video.id.videoId) {
+                            result += `
+                                <div class="video-card">
+                                    <img src="${video.snippet.thumbnails.medium.url}">
+                                    <a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank">
+                                        ${video.snippet.title}
+                                    </a>
+                                </div>
+                            `;
+                        }
+                    });
+
+                    document.getElementById("videos").innerHTML = result;
+
                 });
         }
     </script>
