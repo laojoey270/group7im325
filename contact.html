@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+    <title>Mini YouTube App</title>
+    <style>
+        body { font-family: Arial; text-align: center; }
+        input { width: 300px; padding: 10px; }
+        button { padding: 10px; }
+        iframe { margin-top: 20px; }
+
     <title>YouTube Finder</title>
     <style>
         body {
@@ -51,6 +59,12 @@
 </head>
 <body>
 
+
+    <h1>Mini YouTube App</h1>
+    
+    <input type="text" id="search" placeholder="Search videos...">
+    <button onclick="searchVideos()">Search</button>
+
     <h1>YouTube Finder</h1>
 
     <input type="text" id="searchBox" placeholder="Search videos here...">
@@ -59,6 +73,28 @@
     <div id="videos"></div>
 
     <script>
+        const API_KEY = "YOUR_API_KEY"; // Replace with your YouTube API key
+
+        function searchVideos() {
+            const query = document.getElementById("search").value;
+
+            fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&key=${API_KEY}&maxResults=5`)
+                .then(response => response.json())
+                .then(data => {
+                    let output = "";
+
+                    data.items.forEach(item => {
+                        if (item.id.videoId) {
+                            output += `
+                                <iframe width="300" height="200"
+                                src="https://www.youtube.com/embed/${item.id.videoId}"
+                                frameborder="0" allowfullscreen></iframe>
+                            `;
+                        }
+                    });
+
+                    document.getElementById("videos").innerHTML = output;
+
         const API_KEY = "YOUR_API_KEY"; // Replace with your API key
 
         function getVideos() {
@@ -83,6 +119,7 @@
                     });
 
                     document.getElementById("videos").innerHTML = result;
+
                 });
         }
     </script>
