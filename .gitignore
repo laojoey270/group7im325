@@ -1,8 +1,8 @@
 # Build and Release Folders
 bin-debug/
 bin-release/
-[Oo]bj/
-[Bb]in/
+obj/
+bin/
 
 # Other files and folders
 .settings/
@@ -13,6 +13,33 @@ bin-release/
 *.ipa
 *.apk
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+# IDE / Editor files
+.project
+.classpath
+.actionScriptProperties
+.flexProperties
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+
+# Node modules (if applicable)
+node_modules/
+
+# VS Code settings
+.vscode/
+
+# IntelliJ IDEA
+.idea/
+
+# Keep important project files tracked
+!.project
+!.actionScriptProperties
+!.flexProperties
